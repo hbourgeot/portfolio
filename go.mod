@@ -1,4 +1,4 @@
-module portfolio
+module github.com/hbourgeot/portfolio
 
 go 1.18
 
