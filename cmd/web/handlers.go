@@ -6,7 +6,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	forms "portfolio/internal/models"
+
+	forms "github.com/hbourgeot/portfolio/internal/models"
 )
 
 var NameForm, EmailForm, SubjectForm, MessageForm string
