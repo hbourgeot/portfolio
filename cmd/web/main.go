@@ -4,7 +4,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	forms "portfolio/internal/models"
+
+	forms "github.com/hbourgeot/portfolio/internal/models"
 )
 
 func main() {
