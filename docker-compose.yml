@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  portfolio:
+    build: .
+    container_name: "portfolio-gh-portfolio-1"
+    ports:
+      - 4000:4000
