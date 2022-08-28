@@ -3,12 +3,11 @@ package main
 import (
 	"log"
 	"net/http"
-
-	forms "github.com/hbourgeot/portfolio/internal/models"
+	// forms "github.com/hbourgeot/portfolio/internal/models"
 )
 
 func main() {
-	forms.ConnectToDB()
+	// forms.ConnectToDB()
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 	http.HandleFunc("/", home)
@@ -18,7 +17,7 @@ func main() {
 	http.HandleFunc("/submit", SendForm)
 	http.HandleFunc("/login", Login)
 	log.Printf("Starting server on port :4000")
-	err := http.ListenAndServe(":4000", nil)
+	err := http.ListenAndServe(":4040", nil)
 	if err != nil {
 		log.Fatal(err)
 		return

@@ -2,7 +2,51 @@ version: "3"
 
 services:
   portfolio:
-    build: .
     container_name: "portfolio-gh-portfolio-1"
+    build: .
     ports:
       - 4000:4000
+    restart: on-failure
+    volumes:
+      - portfolio:/usr/src/go
+    depends_on:
+      - fullstack-postgres
+    networks:
+      - fullstack
+
+  fullstack-postgres:
+    image: postgres:latest
+    container_name: full_db_postgres
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST}
+    ports:
+      - "5432:5432"
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+    networks:
+      - fullstack
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - fullstack-postgres
+    ports:
+      - 5050:80
+    networks:
+      - fullstack
+    restart: unless-stopped
+
+volumes:
+  portfolio:
+  database_postgres:
+
+networks:
+  fullstack:
+    driver: bridge

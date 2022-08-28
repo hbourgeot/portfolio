@@ -18,8 +18,7 @@ type Message struct {
 var db *sql.DB
 
 func makeConnection() {
-	connStr := "host=localhost port=5432 user=postgres password=Reyshell dbname=todophone sslmode=disable"
-
+	connStr := "postgres://henrrybrgt:Reyshell@full_db_postgres:5432/portfolio?sslmode=disable"
 	var err error
 	db, err = sql.Open("postgres", connStr)
 	if err != nil {

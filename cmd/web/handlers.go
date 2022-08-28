@@ -22,16 +22,16 @@ func home(w http.ResponseWriter, r *http.Request) {
 		Redirect(w, r, "/not-found")
 		return
 	}
-	temp := template.Must(template.ParseFiles("./ui/index.html"))
-	err := temp.Execute(w, nil)
-	if err != nil {
-		log.Fatalln(err)
-		return
-	}
+	//temp := template.Must(template.ParseFiles("api:go/src/portfolio/ui/index.html"))
+	//err := temp.Execute(w, nil)
+	//if err != nil {
+	//	log.Fatalln(err)
+	//	return
+	//}
 }
 
 func notFound(w http.ResponseWriter, r *http.Request) {
-	temp := template.Must(template.ParseFiles("./ui/404.html"))
+	temp := template.Must(template.ParseFiles("api:go/src/portfolio/ui/404.html"))
 	err := temp.Execute(w, nil)
 	if err != nil {
 		return
