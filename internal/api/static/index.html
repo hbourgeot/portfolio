@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hangman-api</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html">
+    <h1 id="hangman-api">HangMan API</h1>
+    <p>This API is <strong>easy to use</strong>, since it is designed for data consumption, although you can also enter
+      hints with their respective responses (you will see this in depth later). The API is in charge of
+      <strong>returning you the hint together with its answer and the length of this answer</strong> thanks to the fact
+      that <strong>you will pass it a value through a <em>URL</em></strong>, the value would be the ID of the record to
+      which you want to obtain the values mentioned above.</p>
+    <p>The API Github repo is: <a
+        href="https://github.com/hbourgeot/hangman-api">https://github.com/hbourgeot/hangman-api</a></p>
+    <h2 id="get-hangs">Get Hangs</h2>
+    <p>Getting your ‘<em>Hang</em>’ (I’ll call the <strong>returned hint, response and response length</strong>) is very
+      simple, just use the following URL template:</p>
+    <pre><code>https://www.henrry.online/api/get/hangman?id=X
+      </code></pre>
+    <p>Remember that you must change the X for the ID that you want. Now, let’s try to receive the <strong>data from the
+        API</strong>, for this, I will use JS, first create an async function, inside this make a try-catch block and
+      inside the try block declare a constant with the name “result”, that will store the promise of the fetch to the
+      API website, and after making this line of code, declare a constant with the name you want to store the value of
+      the result.json(). If you are confused, take a guide from the following code:</p>
+    <pre><code>async function getHangman() {
+        try {
+        const result = await fetch(
+        "https://www.henrry.online/api/get/hangman?id=1",{ method: "GET",}
+        );
+        const db = await result.json();
+        console.log(db);
+        } catch (e) {
+        console.log(e);
+        }
+        }
+
+        getHangman();
+      </code></pre>
+    <p>And then, <strong>open the console of your web browser</strong> and you will notice that you have the JSON of
+      your ‘<em>Hang</em>’, then from here, it’s up to you how you design the game. But to help you, I will tell you the
+      specific function of each variable.</p>
+    <ul>
+      <li>Hint: store the hint so you can guess and there is no hangman, note that it MUST be in English, you could buy
+        a coffee if you want me to store hintin other languages ;)</li>
+      <li>Answer: stores the answer to the given hint, this SHOULD also be in English.</li>
+      <li>AnswerLenght: stores the length of the response, obviously. This will help you create the necessary spaces to
+        display to the user.</li>
+    </ul>
+    <h2 id="create-hangs">Create Hangs</h2>
+    <p>To create a Hang, the model to follow is very similar, you only have to change the ID parameter for the hint and
+      answer parameters, as you can see in the following example:</p>
+    <pre><code>https://www.henrry.online/api/new/hangman?hint=new+hint&amp;answer=hint+answer
+      </code></pre>
+    <p>Note that if you want the parameters to have spaces, you must <strong>concatenate them using the plus
+        symbol</strong>, after you have finished passing a parameter, continue using “&amp;”, again I remind you that if
+      you want this API to control more languages, you can buy me a coffee ;)</p>
+  </div>
+</body>
+
+</html>

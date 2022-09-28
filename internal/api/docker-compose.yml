@@ -1,52 +1,52 @@
-version: '4'
+version: "3"
 
 services:
-  portfolio:
-    container_name: 'portfolio'
+  hangman:
+    container_name: "hangman-api"
     build: .
     ports:
-      - 4000:4000
+      - 80:80
     restart: on-failure
     volumes:
-      - portfolio:/usr/src/go
+      - api:/usr/src/go
     depends_on:
-      - fullstack-postgres
+      - api-postgres
     networks:
-      - fullstack
+      - api-bridge
 
-  fullstack-postgres:
+  api-postgres:
     image: postgres:latest
-    container_name: full_db_postgres
+    container_name: hangman-pg
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
       - DATABASE_HOST=${DB_HOST}
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - database_postgres:/var/lib/postgresql/data
     networks:
-      - fullstack
+      - api-bridge
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin_container
+    container_name: api-postgres-admin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     depends_on:
-      - fullstack-postgres
+      - api-postgres
     ports:
-      - 5050:80
+      - 5050:5050
     networks:
-      - fullstack
+      - api-bridge
     restart: unless-stopped
 
 volumes:
-  portfolio:
+  api:
   database_postgres:
 
 networks:
-  fullstack:
+  api-bridge:
     driver: bridge

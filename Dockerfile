@@ -1,3 +1,4 @@
+
 FROM golang:alpine AS build
 ENV GOPROXY=https://proxy.golang.org
 
