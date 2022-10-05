@@ -1,13 +1,13 @@
-package main
+package api
 
-import (
+ import (
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
-	"gamesapi/hangman/internal/models"
+	"github.com/hbourgeot/portfolio/internal/hangman"
 )
 
 func enableCors(w *http.ResponseWriter) {
@@ -29,7 +29,7 @@ func GetHangman(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	quest := models.GetQuestion(id)
+	quest := hangman.GetQuestion(id)
 
 	json.NewEncoder(w).Encode(quest)
 }
@@ -38,7 +38,7 @@ func CreateHangman(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	hint, answer := r.URL.Query().Get("hint"), r.URL.Query().Get("answer")
 	fmt.Println(hint, answer)
-	err := models.Insert(hint, answer)
+	err := hangman.Insert(hint, answer)
 	if err != nil {
 		log.Fatal(err)
 		return

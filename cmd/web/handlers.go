@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 
 	forms "github.com/hbourgeot/portfolio/internal/models"
 )
@@ -18,6 +19,11 @@ func Redirect(w http.ResponseWriter, r *http.Request, location string) {
 
 func home(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
+
+	if strings.Contains(r.URL.Path, "/api/create/hangman") || strings.Contains(r.URL.Path, "/api/get/hangman") {
+		return
+	}
+
 	if r.URL.Path != "/" {
 		Redirect(w, r, "/not-found")
 		return

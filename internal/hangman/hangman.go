@@ -1,4 +1,4 @@
-package models
+package hangman
 
 import (
 	"database/sql"
