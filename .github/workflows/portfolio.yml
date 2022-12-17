@@ -1,0 +1,14 @@
+name: Portfolio
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_folio:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Echo the message
+        run: |
+          echo "Hello world"
