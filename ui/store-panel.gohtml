@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/store.css">
+</head>
+<body class="flex flex-col lg:flex-row">
+<div class="flex flex-col mx-5 space-y-5">
+    <div class="card bg-primary text-primary-content shadow-xl  w-full">
+        <div class="card-body">
+            <h2 class="card-title">Insert Product</h2>
+            <form method="post" action="/store/admin/yes/new"
+                  class="bg-white rounded-lg shadow md:max-w-md md:w-full md:mx-auto md:overflow-hidden">
+                <div class="px-4 py-8 sm:px-10">
+                    <div class="relative mt-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="w-full space-y-6">
+                            <div class="w-full">
+                                <div class=" relative ">
+                                    <input type="text" id="insert-code" required name="code"
+                                           class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                           placeholder="Product Code"/>
+                                </div>
+                                <div class=" relative ">
+                                {{if eq .Form nil}}
+                                {{else}}
+                                {{with .Form.FieldErrors.newCode}}
+                                    <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                                {{end}}
+                                {{end}}
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <div class=" relative ">
+                                    <input type="text" id="insert-name" required name="name" maxlength="255"
+                                           class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                           placeholder="Product Name"/>
+                                </div>
+                                <div class=" relative ">
+                                {{if eq .Form nil}}
+                                {{else}}
+                                {{with .Form.FieldErrors.name}}
+                                    <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                                {{end}}
+                                {{end}}
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <div class=" relative ">
+                                    <input type="text" id="insert-cat" required name="category" maxlength="100"
+                                           class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                           placeholder="Product category"/>
+                                </div>
+                                <div class=" relative ">
+                                {{if eq .Form nil}}
+                                {{else}}
+                                {{with .Form.FieldErrors.category}}
+                                    <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                                {{end}}
+                                {{end}}
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <div class=" relative ">
+                                    <input type="text" id="insert-price" required name="price" maxlength="100"
+                                           class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                           placeholder="Product price"/>
+                                </div>
+                                <div class=" relative ">
+                                {{if eq .Form nil}}
+                                {{else}}
+                                {{with .Form.FieldErrors.price}}
+                                    <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                                {{end}}
+                                {{end}}
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <div class=" relative ">
+                                    <input type="text" id="insert-imageurl" required name="image_url"
+                                           maxlength="100"
+                                           class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                           placeholder="Image URL"/>
+                                </div>
+                                <div class=" relative ">
+                                {{if eq .Form nil}}
+                                {{else}}
+                                {{with .Form.FieldErrors.image_url}}
+                                    <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                                {{end}}
+                                {{end}}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="block w-full rounded-md shadow-sm">
+                                    <button type="submit"
+                                            class="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
+                                        Submit
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-4 py-6 border-t-2 border-gray-200 bg-gray-50 sm:px-10">
+                    {{if or (eq .Form nil) (eq .Form.FieldErrors.insert nil)}}
+                    {{else}}
+                    {{with .Form.FieldErrors.insert}}
+                    <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                    {{end}}
+                    {{end}}
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card bg-primary text-primary-content shadow-xl h-[fit-content] w-full">
+        <div class="card-body">
+            <h2 class="card-title">Delete Product</h2>
+            <form method="post" action="/store/admin/yes/del"
+                  class="bg-white rounded-lg shadow sm:max-w-md sm:w-full sm:mx-auto sm:overflow-hidden">
+                <div class="px-4 py-8 sm:px-10">
+                    <div class="relative mt-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="w-full space-y-6">
+                            <div class="w-full">
+                                <div class=" relative ">
+                                    <input type="text" id="delete-code" name="code"
+                                           class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                           placeholder="Product Code"/>
+                                </div>
+                                <div class=" relative ">
+                                {{if eq .Form nil}}
+                                {{else}}
+                                {{with .Form.FieldErrors.delCode}}
+                                    <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                                {{end}}
+                                {{end}}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="block w-full rounded-md shadow-sm">
+                                    <button type="submit"
+                                            class="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
+                                        Submit
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-4 py-6 border-t-2 border-gray-200 bg-gray-50 sm:px-10">
+                    {{if or (eq .Form nil) (eq .Form.FieldErrors.delete nil)}}
+                    <p class="text-xm leading-5 text-gray-500">
+                        NOTE: If you DELETE A PRODUCT, this will DELETE ORDERS asociated at this PRODUCT CODE.
+                    </p>
+                    {{else}}
+                    {{with .Form.FieldErrors.delete}}
+                    <p class="text-xs leading-5 text-red-500">{{.}}</p>
+                    {{end}}
+                    {{end}}
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card bg-primary text-primary-content shadow-xl h-[fit-content] w-full">
+        <div class="card-body">
+            <h2 class="card-title">Update Product</h2>
+            <form method="post" action="/store/admin/yes/mod"
+                  class="bg-white rounded-lg shadow sm:max-w-md sm:w-full sm:mx-auto sm:overflow-hidden">
+                <div class="px-4 py-8 sm:px-10">
+                    <div class="relative mt-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="w-full space-y-6">
+                            <div class="w-full">
+                                <div class=" relative ">
+                                    <input type="text" id="update-code" name="code"
+                                           class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                           placeholder="Product Code"/>
+                                </div>
+                                <div class=" relative ">
+                                {{if eq .Form nil}}
+                                {{else}}
+                                {{with .Form.FieldErrors.modCode}}
+                                    <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                                {{end}}
+                                {{end}}
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <div class=" relative ">
+                                    <input type="text" id="col-tomodify" name="modify" maxlength="12"
+                                           class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                           placeholder="Column To Modify"/>
+                                </div>
+                                <div class=" relative ">
+                                {{if eq .Form nil}}
+                                {{else}}
+                                {{with .Form.FieldErrors.column_modify}}
+                                    <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                                {{end}}
+                                {{end}}
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <div class=" relative ">
+                                    <input type="text" id="new-val" name="new_val" maxlength="255"
+                                           class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                           placeholder="Your name"/>
+                                </div>
+                                <div class=" relative ">
+                                {{if eq .Form nil}}
+                                {{else}}
+                                {{with .Form.FieldErrors.new_val}}
+                                    <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                                {{end}}
+                                {{end}}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="block w-full rounded-md shadow-sm">
+                                    <button type="submit"
+                                            class="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
+                                        Submit
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-4 py-6 border-t-2 border-gray-200 bg-gray-50 sm:px-10">
+                {{if or (eq .Form nil) (eq .Form.FieldErrors.modify nil)}}
+                <p class="text-xm leading-5 text-gray-500">
+                    NOTE: If you MODIFY A PRODUCT CODE, this will UPDATE in ORDERS asociated at this PRODUCT CODE.
+                </p>
+                {{else}}
+                {{with .Form.FieldErrors.modify}}
+                <p class="text-xm leading-5 text-red-500">{{.}}</p>
+                {{end}}
+                {{end}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="overflow-x-auto ml-5 w-full h-[fit-content] sticky top-0">
+    <table class="table table-compact w-full">
+        <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Image URL</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Products}}
+            <tr>
+                <td>{{.Code}}</td>
+                <td>{{.Name}}</td>
+                <td>{{.Cat}}</td>
+                <td>{{.Price}}</td>
+                <td>{{.ImageUrl}}</td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

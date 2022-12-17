@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" data-theme="winter">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Products</title>
+    <link rel="stylesheet" href="/static/css/store.css">
+</head>
+<body>
+<div class="navbar bg-base-100">
+    <div class="navbar-start">
+        <div class="dropdown">
+            <label tabindex="0" class="btn btn-ghost lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
+                </svg>
+            </label>
+            <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                <li tabindex="0">
+                    <a href="/products" class="justify-between">
+                        Products
+                    </a>
+                </li>
+                <li><a>Contact</a></li>
+            </ul>
+        </div>
+        <a class="btn btn-ghost normal-case text-xl" href="/">TodoTech Store</a>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+        <ul class="menu menu-horizontal p-0">
+            <li tabindex="0">
+                <a href="/products">
+                    Products
+                </a>
+            </li>
+            <li><a>Contact</a></li>
+        </ul>
+    </div>
+    <div class="navbar-end">
+        <a href="#cart" id="order" class="btn btn-primary ml-3">See Order</a>
+    </div>
+</div>
+<div class="flex flex-wrap gap-3 justify-between mt-5 container mx-auto mb-5">
+{{range .Products}}
+  <div class="shadow-lg rounded-3xl bg-white w-80 p-2">
+    <img class="w-32 p-4 h-36 m-auto" src="{{.ImageUrl}}">
+    <div class="bg-primary m-3 p-4 rounded-lg">
+        <p class="text-white text-xl font-bold">{{.Name}}</p>
+        <p class="text-gray50 text-xs">{{.Cat}}</p>
+        <div class="flex items-center justify-between">
+            <p class="text-white">{{.Price}}$</p>
+            <button type="button" product-code="{{.Code}}" class="btn btn-secondary btn-circle text-2xl font-bold">
+        </div>
+    </div>
+    </div>
+{{end}}
+</div>
+
+<div class="bg-gray-100 mt-5" id="cart">
+    <div class="container mx-auto mt-10">
+        <div class="flex shadow-md py-10">
+            <div class="w-3/4 bg-white px-10 py-10">
+                <div class="flex justify-between border-b pb-8">
+                    <h3 class="font-semibold text-2xl">Shopping Cart</h3>
+                </div>
+                <div class="flex mt-10 mb-5">
+                    <h3 class="font-semibold text-gray-600 text-xs uppercase w-2/5">Product Details</h3>
+                    <h3 class="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">
+                        Quantity</h3>
+                    <h3 class="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">Price</h3>
+                    <h3 class="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">Total</h3>
+                </div>
+                <div id="shopping-cart"></div>
+            </div>
+
+
+            <div id="summary" class="w-1/4 px-8 py-10">
+                <h2 class="font-semibold text-2xl border-b pb-8">Customer Personal Data</h2>
+                <div class="border-t mb-10">
+                    <input type="text" id="order-name" class="input input-bordered input-ghost w-full mb-3"
+                           placeholder="Your Name">
+                    <input type="text" id="order-location" class="input input-bordered input-ghost w-full mb-3"
+                           placeholder="Your location">
+                    <input type="text" id="order-username" class="input input-bordered input-ghost w-full mb-3"
+                           placeholder="Your email">
+                    <input type="text" id="order-country" class="input input-bordered input-ghost w-full mb-3"
+                           placeholder="Your country">
+                </div>
+                <h2 class="font-semibold text-2xl border-b pb-8">Order Summary</h2>
+                <div class="border-t mt-8">
+                    <div class="flex font-semibold justify-between py-6 text-sm uppercase">
+                        <span>Total cost</span>
+                        <span><span id="total-cost">0</span> USD$</span>
+                    </div>
+                    <button type="button" id="checkout"
+                            class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">
+                        Checkout
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="/static/js/products-page.js"></script>
+</body>
+</html>

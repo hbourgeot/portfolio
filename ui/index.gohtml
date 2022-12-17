@@ -12,6 +12,9 @@
 </head>
 
 <body class="is-preload">
+  {{with .Flash}}
+    <div class="flash">{{.}}</div>
+  {{end}}
   <section id="header">
     <header>
       <span class="image avatar"><img src="/static/images/avatar.webp" alt="" /></span>
@@ -87,6 +90,7 @@
           <ul class="feature-icons">
             <li class="icon brands fa-css3-alt">CSS</li>
             <li class="icon brands fa-html5">HTML</li>
+            <li class="icon brands fa-python">Python</li>
             <li class="icon brands fa-js-square">JavaScript</li>
             <li class="icon brands fa-golang">Go</li>
             <li class="icon solid fa-database">Microsoft SQL Server</li>
@@ -97,6 +101,7 @@
           <ul class="feature-icons">
             <li class="icon brands fa-sass">SASS</li>
             <li class="icon brands fa-bootstrap">Bootstrap</li>
+            <li class="icon solid fa-code">Tailwind</li>
             <li class="icon brands fa-git-alt">Git</li>
             <li class="icon solid fa-code">VS Code / Visual Studio</li>
             <li class="icon brands fa-linux">Bash</li>
@@ -120,7 +125,7 @@
               </div>
             </article>
             <article>
-              <a href="https://hangmanapi-hb.herokuapp.com/" class="image" target="_blank"><img
+              <a href="https://github.com/hbourgeot/hangman-api/" class="image" target="_blank"><img
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT05DJsNsc2w6q8H5uIM6WsjDPJXIHmDb091w&usqp=CAU"
                   alt="Hangman API" /></a>
               <div class="inner">
@@ -132,7 +137,18 @@
               </div>
             </article>
             <article>
-              <a href="https://www.henrry.online/store/" target="_blank" class="image"><img
+              <a href="https://github.com/hbourgeot/hangman-api/" class="image" target="_blank"><img
+                  src="https://repository-images.githubusercontent.com/260928305/92388600-8d1c-11ea-9993-a726466b5099"
+                  alt="Hangman Fast-API" /></a>
+              <div class="inner">
+                <h4>Hangman API</h4>
+                <p>
+                  The same API, but writed in Fast API.
+                </p>
+              </div>
+            </article>
+            <article>
+              <a href="/store" target="_blank" class="image"><img
                   src="https://aziest1xcg379.blob.core.windows.net/ve-uploads/2021/08/ecommerce.jpg"
                   alt="TodoTech Store" /></a>
               <div class="inner">
@@ -161,7 +177,7 @@
         <div class="container">
           <h3>Contact</h3>
           <p>If you want, fill the form, and I'll contact you soon.</p>
-          <form method="post" action="/submit">
+          <form method="post" action="/send">
             <div class="row gtr-uniform">
               <div class="col-6 col-12-xsmall">
                 <input type="text" name="name-form" id="name" placeholder="Name" maxlength="60" required />

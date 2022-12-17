@@ -20,6 +20,9 @@
   </head>
   <body>
     <h1>Hello, Login</h1>
+    {{with .Flash}}
+        <div class="flash">{{.}}</div>
+    {{end}}
     <form method="post" action="/login">
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
@@ -38,6 +41,7 @@
           class="form-control"
           id="password"
           name="password-login"
+          value=""
         />
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>

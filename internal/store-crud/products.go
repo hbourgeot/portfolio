@@ -3,14 +3,22 @@ package crud
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 )
 
-func InsertProducts(code int, name string, cat string, imageUrl string, price float64) error {
+func InsertProducts(code int, name string, cat string, imageUrl string, price int) error {
 	db, err := makeCN()
+	if err != nil {
+		return err
+	}
 
-	query := "INSERT INTO products (code,name,cat,price,image_url) VALUES ($1,$2,$3,$4,$5)"
+	query := "INSERT INTO products (code, name, category, price, image_url) VALUES (?, ?, ?, ?, ?)"
 	result, err := db.Exec(query, code, name, cat, price, imageUrl)
 	if err != nil {
+		if err.Error() == "Error 1062 (23000): Duplicate entry '1' for key 'products.PRIMARY'" {
+			return errors.New("The product already exists")
+		}
+
 		return err
 	}
 
@@ -28,7 +36,7 @@ func GetProductByCode(code int) (*Products, error) {
 		return nil, err
 	}
 
-	query := "SELECT * FROM products WHERE code = $1"
+	query := "SELECT * FROM products WHERE code = ?"
 	row := db.QueryRow(query, code)
 
 	p := &Products{}
@@ -62,7 +70,7 @@ func GetAllProducts() ([]*Products, error) {
 
 	for rows.Next() {
 		p := &Products{}
-		err := rows.Scan(&p.Code, &p.Name, &p.Cat, &p.Price, &p.ImageUrl)
+		err := rows.Scan(&p.Code, &p.Name, &p.Cat, &p.ImageUrl, &p.Price)
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				return nil, err
@@ -87,22 +95,24 @@ func UpdateProducts(columnEdit string, newValue any, code int) error {
 		return err
 	}
 
+	if _, err = GetProductByCode(code); err == sql.ErrNoRows {
+		return errors.New("The product doesn't exists")
+	}
 	var query string
 	switch columnEdit {
 	case "code":
-		query = "UPDATE products SET code = $1 WHERE code = $2"
+		query = "UPDATE products SET code = ? WHERE code = ?"
 	case "name":
-		query = "UPDATE products SET name = $1 WHERE code = $2"
-		break
+		query = "UPDATE products SET name = ? WHERE code = ?"
 	case "category", "cat":
-		query = "UPDATE products SET category = $1 WHERE code = $2"
-		break
+		query = "UPDATE products SET category = ? WHERE code = ?"
 	case "price":
-		query = "UPDATE products SET price = $1 WHERE code = $2"
-		break
+		query = "UPDATE products SET price = ? WHERE code = ?"
 	case "image", "image-url", "url", "imageurl", "image url":
-		query = "UPDATE products SET image_url = $1 WHERE code = $2"
-		break
+		query = "UPDATE products SET image_url = ? WHERE code = ?"
+	default:
+		err = fmt.Errorf("invalid column")
+		return err
 	}
 	_, err = db.Exec(query, newValue, code)
 	if err != nil {
@@ -118,7 +128,11 @@ func DeleteProducts(code int) error {
 		return err
 	}
 
-	query := "DELETE FROM products WHERE code = $1"
+	if _, err = GetProductByCode(code); err != nil {
+		return errors.New("The product doesn't exists")
+	}
+
+	query := "DELETE FROM products WHERE code = ?"
 	_, err = db.Exec(query, code)
 	if err != nil {
 		return err

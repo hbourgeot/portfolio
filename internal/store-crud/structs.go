@@ -24,5 +24,5 @@ type Products struct {
 type Orders struct {
 	ID         int
 	ProductCod int
-	ClientDNI  int
+	ClientUser string
 }

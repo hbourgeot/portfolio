@@ -1,23 +1,28 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"html/template"
-	"log"
 	"net/http"
 	"strings"
 
-	forms "github.com/hbourgeot/portfolio/internal/models"
+	"github.com/julienschmidt/httprouter"
+	"henrry.online/internal/validator"
 )
 
-var NameForm, EmailForm, SubjectForm, MessageForm string
-
-func Redirect(w http.ResponseWriter, r *http.Request, location string) {
-	http.Redirect(w, r, location, http.StatusSeeOther)
+type messageForm struct {
+	Name                string `form:"name-form"`
+	Email               string `form:"email-form"`
+	Subject             string `form:"subject-form"`
+	Message             string `form:"message-form"`
+	validator.Validator `form:"-"`
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
+type loginForm struct {
+	Username            string `form:"username-login"`
+	Password            string `form:"password-login"`
+	validator.Validator `form:"-"`
+}
+
+func (folio *portfolio) home(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 
 	if strings.Contains(r.URL.Path, "/api/create/hangman") || strings.Contains(r.URL.Path, "/api/get/hangman") {
@@ -25,94 +30,118 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.URL.Path != "/" {
-		Redirect(w, r, "/not-found")
+		http.Redirect(w, r, "/not-found", http.StatusNotFound)
 		return
 	}
-	temp := template.Must(template.ParseFiles("go/src/portfolio/ui/index.html"))
-	err := temp.Execute(w, nil)
-	if err != nil {
-		log.Fatalln(err)
-		return
-	}
-}
 
-func notFound(w http.ResponseWriter, r *http.Request) {
-	temp := template.Must(template.ParseFiles("go/src/portfolio/ui/404.html"))
-	err := temp.Execute(w, nil)
-	if err != nil {
-		return
-	}
+	data := folio.newTemplateData(r)
+	folio.render(w, http.StatusOK, "./ui/index.gohtml", data)
 }
 
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
 
-func SendForm(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+func (folio *portfolio) SendMessage(w http.ResponseWriter, r *http.Request) {
+	var form messageForm
+
+	err := folio.decodePostForm(r, &form)
 	if err != nil {
-		log.Fatal(err)
-	}
-	NameForm, EmailForm, SubjectForm, MessageForm = r.PostForm.Get("name-form"), r.PostForm.Get("email-form"), r.PostForm.Get("subject-form"), r.PostForm.Get("message-form")
-	defer Redirect(w, r, "/")
-	fmt.Fprintf(w, "The form values has been send. I will contact you soon.")
-	if err != nil {
+		folio.clientError(w, http.StatusBadRequest)
 		return
 	}
-	err = forms.Insert(NameForm, EmailForm, SubjectForm, MessageForm)
-	if err != nil {
-		log.Printf("algo hiciste mal, %s", err)
+
+	form.CheckField(validator.NotBlank(form.Name), "name", "This field cannot be blank")
+	form.CheckField(validator.NotBlank(form.Email), "email", "This field cannot be blank")
+	form.CheckField(validator.NotBlank(form.Subject), "subject", "This field cannot be blank")
+	form.CheckField(validator.NotBlank(form.Message), "message", "This field cannot be blank")
+
+	form.CheckField(validator.MinChars(form.Name, 5), "name", "This field must be 5 characters long")
+	form.CheckField(validator.MinChars(form.Email, 20), "email", "This field must be 20 characters long")
+	form.CheckField(validator.MinChars(form.Subject, 50), "subject", "This field must be 50 characters long")
+	form.CheckField(validator.MaxChars(form.Message, 200), "message", "This field cannot be more than 150 characters long")
+	form.CheckField(validator.Matches(form.Email, validator.EmailRX), "email", "Please, enter a valid email")
+
+	if !form.Valid() {
+		data := folio.newTemplateData(r)
+		data.Form = form
+		folio.render(w, http.StatusUnprocessableEntity, "./ui/index.gohtml", data)
 		return
 	}
+
+	err = folio.messages.Insert(form.Name, form.Email, form.Subject, form.Message)
+	if err != nil {
+		folio.serverError(w, err)
+		return
+	}
+
+	folio.sessionManager.Put(r.Context(), "flash", "Form successfully submited!")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func LoginPage(w http.ResponseWriter, r *http.Request) {
-	temp := template.Must(template.ParseFiles("go/src/portfolio/ui/login.html"))
-	err := temp.Execute(w, nil)
-	if err != nil {
-		return
-	}
+func (folio *portfolio) Login(w http.ResponseWriter, r *http.Request) {
+	data := folio.newTemplateData(r)
+	data.Form = nil
+	folio.render(w, http.StatusOK, "./ui/login.gohtml", data)
 }
 
-func Login(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+func (folio *portfolio) LoginPost(w http.ResponseWriter, r *http.Request) {
+	var form loginForm
+
+	err := folio.decodePostForm(r, &form)
 	if err != nil {
-		log.Fatal(err)
+		folio.clientError(w, http.StatusBadRequest)
 		return
 	}
-	username, pass := r.PostForm.Get("username-login"), r.PostForm.Get("password-login")
-	res, err := forms.CheckLogin(username, pass)
-	if err != nil {
-		log.Fatal(err)
+
+	form.CheckField(validator.NotBlank(form.Username), "username", "This field cannot be blank")
+	form.CheckField(validator.NotBlank(form.Password), "password", "This field cannot be blank")
+	form.CheckField(validator.MinChars(form.Username, 20), "username", "This field must be 20 characters long")
+	form.CheckField(validator.MinChars(form.Password, 20), "password", "This field must be 20 characters long")
+	form.CheckField(validator.Matches(form.Username, validator.EmailRX), "username", "Please, enter a valid email")
+
+	if !form.Valid() {
+		data := folio.newTemplateData(r)
+		data.Form = form
+		folio.render(w, http.StatusUnprocessableEntity, "./ui/login.gohtml", data)
 		return
 	}
-	confirmLogin(w, r, res)
+
+	err = folio.users.CheckLogin(form.Username, form.Password)
+	if err != nil {
+		data := folio.newTemplateData(r)
+		data.Form = form
+		folio.sessionManager.Put(r.Context(), "flash", "User or password may be incorrect")
+		folio.render(w, http.StatusUnprocessableEntity, "./ui/login.gohtml", data)
+		return
+	}
+
+	http.Redirect(w, r, "/panel/yes", http.StatusSeeOther)
 }
 
-func showMessages(w http.ResponseWriter, r *http.Request) {
-	messages, err := forms.ShowMSGs()
-	if err != nil {
-		log.Fatal(err)
+func (folio *portfolio) ShowPanel(w http.ResponseWriter, r *http.Request) {
+	params := httprouter.ParamsFromContext(r.Context())
+	if logged := params.ByName("logged"); logged != "yes" {
+		folio.notFound(w)
 		return
 	}
-	enableCors(&w)
-	err = json.NewEncoder(w).Encode(messages)
+
+	messages, err := folio.messages.ShowMSGs()
 	if err != nil {
+		folio.serverError(w, err)
 		return
 	}
+
+	data := folio.newTemplateData(r)
+	data.Messages = messages
+
+	folio.render(w, http.StatusOK, "./ui/panel.gohtml", data)
 }
 
-func confirmLogin(w http.ResponseWriter, r *http.Request, res bool) {
-	if res != false {
-		http.HandleFunc("/json", showMessages)
-		Redirect(w, r, "/admin/panel")
-	}
+func (folio *portfolio) StoreHome(w http.ResponseWriter, r *http.Request) {
+	folio.render(w, http.StatusOK, "./ui/store.gohtml", nil)
 }
 
-func ShowPanel(w http.ResponseWriter, r *http.Request) {
-	temp := template.Must(template.ParseFiles("go/src/ṕortfolio/ui/panel.html"))
-	err := temp.Execute(w, nil)
-	if err != nil {
-		return
-	}
+func (folio *portfolio) StoreLogin(w http.ResponseWriter, r *http.Request) {
+	folio.render(w, http.StatusOK, "./ui/store-login.gohtml", nil)
 }

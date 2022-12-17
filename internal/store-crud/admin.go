@@ -6,7 +6,7 @@ func ConfirmLogin(user, pass string) error {
 		return err
 	}
 
-	query := "SELECT username, password, country FROM customers WHERE username = $1 AND password = $2"
+	query := "SELECT username, password, country FROM customers WHERE username = ? AND password = ?"
 	row := db.QueryRow(query, user, pass)
 	if row.Err() != nil {
 		return row.Err()

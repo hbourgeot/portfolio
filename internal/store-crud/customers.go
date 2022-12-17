@@ -10,16 +10,14 @@ func CreateClient(username, name, country string) error {
 		return err
 	}
 
-	query := "INSERT INTO customers (username,name,country) VALUES ($1,$2,$3)"
+	query := "INSERT INTO customers (username,name,country) VALUES (?, ?, ?)"
 	result, err := db.Exec(query, username, name, country)
 	if err != nil {
-
 		return err
 	}
 
 	_, err = result.RowsAffected()
 	if err != nil {
-
 		return err
 	}
 

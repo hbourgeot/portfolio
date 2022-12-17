@@ -3,12 +3,12 @@ package crud
 import (
 	"database/sql"
 
-	_ "github.com/lib/pq"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func makeCN() (*sql.DB, error) {
-	conn := "postgres://henrrybrgt:Reyshell@full_db_postgres:5432/store"
-	db, err := sql.Open("postgres", conn)
+	conn := "root:Wini.h16b.@/todotech?parseTime=true"
+	db, err := sql.Open("mysql", conn)
 	if err != nil {
 		return nil, err
 	}

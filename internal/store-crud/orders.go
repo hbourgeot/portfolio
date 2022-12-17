@@ -14,7 +14,7 @@ func GenerateOrder(username string, cart []int) error {
 		t.Year(), t.Month(), t.Day(),
 		t.Hour(), t.Minute(), t.Second())
 
-	query := "INSERT INTO cart (username, product, order_gnrted) VALUES ($1,$2,$3)"
+	query := "INSERT INTO cart (username, product, order_gnrted) VALUES (?, ?, ?)"
 	var result sql.Result
 
 	for i := range cart {

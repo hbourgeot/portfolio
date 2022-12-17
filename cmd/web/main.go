@@ -1,51 +1,93 @@
 package main
 
+// Packages to import
 import (
+	"database/sql"
+	"flag"
 	"log"
 	"net/http"
+	"os"
+	"time"
 
-	"github.com/hbourgeot/portfolio/internal/api"
-	forms "github.com/hbourgeot/portfolio/internal/models"
-	"github.com/hbourgeot/portfolio/internal/store"
+	"github.com/alexedwards/scs/mysqlstore"
+	"github.com/alexedwards/scs/v2"
+	"github.com/go-playground/form/v4"
+	"henrry.online/internal/forms"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
+// Struct for dependency injection
+type portfolio struct {
+	errorLog       *log.Logger
+	infoLog        *log.Logger
+	messages       *forms.MessageModel
+	users          *forms.UserModel
+	formDecoder    *form.Decoder
+	sessionManager *scs.SessionManager
+}
+
 func main() {
-	forms.ConnectToDB()
-	fileServer := http.FileServer(http.Dir("go/src/portfolio/ui/static/"))
-	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
+	// Portfolio flags
+	addr := flag.String("addr", ":4000", "HTTP network address")
+	dsn := flag.String("dsn", "root:Wini.h16b.@/portfolio?parseTime=true", "MySQL data source name")
 
-	// Portfolio handlers
-	http.HandleFunc("/", home)
-	http.HandleFunc("/not-found", notFound)
-	http.HandleFunc("/admin", LoginPage)
-	http.HandleFunc("/admin/panel", ShowPanel)
-	http.HandleFunc("/submit", SendForm)
-	http.HandleFunc("/login", Login)
-	log.Printf("Starting server on port :4040")
+	flag.Parse()
 
-	// API handlers
-	fileServer = http.FileServer(http.Dir("go/src/portfolio/internal/api/static"))
-	http.Handle("/api", fileServer)
-	http.HandleFunc("/api/get/hangman", api.GetHangman)
-	http.HandleFunc("/api/new/hangman", api.CreateHangman)
+	// Loggers
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime|log.Lshortfile)
+	errorLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	// Store handlers
-	fileServer = http.FileServer(http.Dir("go/src/portfolio/internal/store/ui/static"))
-	http.Handle("/static/store", fileServer)
-	http.HandleFunc("/store", store.Home)
-	http.HandleFunc("/store/products", store.ShowProducts)
-	http.HandleFunc("/store/products/cart", store.GetProductforCart)
-	http.HandleFunc("/store/neworder", store.NewOrder)
-	http.HandleFunc("/store/admin", store.Login)
-	http.HandleFunc("/store/admin/panel", store.AdminCRUD)
-	http.HandleFunc("/store/admin/panel/ins", store.AdminCreate)
-	http.HandleFunc("/store/admin/panel/upda", store.AdminUpdate)
-	http.HandleFunc("/store/admin/panel/del", store.AdminDelete)
-	http.HandleFunc("/store/submit", store.LoginAdm)
-
-	err := http.ListenAndServe(":4000", nil)
+	// Connection to database
+	db, err := openDB(*dsn)
 	if err != nil {
-		log.Fatal(err)
-		return
+		errorLog.Fatal(err)
 	}
+	defer db.Close() // finally, close the db connection
+
+	// Form decoder
+	formDecoder := form.NewDecoder()
+
+	// Session manager
+	sessionManager := scs.New()
+	sessionManager.Store = mysqlstore.New(db)
+	sessionManager.Lifetime = 12 * time.Hour
+	sessionManager.Cookie.Secure = true
+
+	// Assign values to portfolio struct
+	app := &portfolio{
+		errorLog:       errorLog,
+		infoLog:        infoLog,
+		formDecoder:    formDecoder,
+		messages:       &forms.MessageModel{DB: db},
+		users:          &forms.UserModel{DB: db},
+		sessionManager: sessionManager,
+	}
+
+	// Server config
+	srv := &http.Server{
+		Addr:         *addr,
+		ErrorLog:     errorLog,
+		Handler:      app.routes(),
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	infoLog.Println("Starting server on port 4000")
+	err = srv.ListenAndServe()
+	errorLog.Fatal(err)
+}
+
+func openDB(dsn string) (*sql.DB, error) {
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = db.Ping(); err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
