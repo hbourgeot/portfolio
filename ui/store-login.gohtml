@@ -34,9 +34,9 @@
               class=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
               placeholder="Your username" />
           </div>
-          {{if eq .Form nil}}
+          {{if or (eq .Form nil) (eq .Form.FieldErrors.username nil)}}
           {{else}}
-          {{with .Form.FieldErrors.newCode}}
+          {{with .Form.FieldErrors.username}}
           <p class="text-xm leading-5 text-red-500">{{.}}</p>
           {{end}}
           {{end}}
@@ -56,9 +56,9 @@
               class=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
               placeholder="Your password" />
           </div>
-          {{if eq .Form nil}}
+          {{if or (eq .Form nil) (eq .Form.FieldErrors.password nil)}}
           {{else}}
-          {{with .Form.FieldErrors.newCode}}
+          {{with .Form.FieldErrors.password}}
           <p class="text-xm leading-5 text-red-500">{{.}}</p>
           {{end}}
           {{end}}
