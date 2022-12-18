@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/julienschmidt/httprouter"
-	"henrry.online/internal/validator"
+	"github.com/hbourgeot/portfolio/internal/validator"
 )
 
 type messageForm struct {

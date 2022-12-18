@@ -1,4 +1,4 @@
-module henrry.online
+module github.com/hbourgeot/portfolio
 
 go 1.19
 

@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/julienschmidt/httprouter"
-	"henrry.online/internal/api"
+	"github.com/hbourgeot/portfolio/internal/api"
 )
 
 func enableCors(w *http.ResponseWriter) {

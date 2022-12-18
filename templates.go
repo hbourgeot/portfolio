@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"henrry.online/internal/forms"
+	"github.com/hbourgeot/portfolio/internal/forms"
 )
 
 type templateData struct {

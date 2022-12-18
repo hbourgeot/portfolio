@@ -5,8 +5,8 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
-	"henrry.online/internal/hangman"
-	"henrry.online/internal/store"
+	"github.com/hbourgeot/portfolio/internal/hangman"
+	"github.com/hbourgeot/portfolio/internal/store"
 )
 
 func (folio *portfolio) routes() http.Handler {

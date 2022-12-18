@@ -12,7 +12,7 @@ import (
 	"github.com/alexedwards/scs/mysqlstore"
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-playground/form/v4"
-	"henrry.online/internal/forms"
+	"github.com/hbourgeot/portfolio/internal/forms"
 
 	_ "github.com/go-sql-driver/mysql"
 )
