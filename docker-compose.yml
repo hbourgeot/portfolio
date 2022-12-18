@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  portfolio:
+    build: # Use the Dockerfile from the current directory to build container.
+      context: .
+    container_name: portfolio
+    restart: on-failure
+    ports:
+      - "80:4000"
+    depends_on:
+      - "db"
+
+  db:
+    image: mysql:latest # use latest version of mysql
+    container_name: db # add a name for the container
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment: # add default values, see docs for more info.
+      MYSQL_USER: henrry
+      MYSQL_ROOT_PASSWORD: Wini.h16b.
+      MYSQL_PASSWORD: Wini.h16b.
+      MYSQL_DATABASE: portfolio # create this database on startup
+    volumes:
+      - my-db:/var/lib/mysql
+    ports:
+      - "5432:3306"
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes: # add volume to persist data.
+  my-db:
