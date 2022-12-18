@@ -6,7 +6,8 @@ WORKDIR /go/src/github.com/henrry.online
 COPY . .
 # Obtain the package needed to run redis commands. Alternatively use GO Modules.
 RUN go mod download
+
 # Compile the binary exe for our app.
-RUN go build -o main ./cmd/web
+RUN go build -o main ./cmd/web/
 # Start the application.
 CMD ["./main"]
