@@ -10,6 +10,10 @@ services:
       - "80:4000"
     depends_on:
       - "db"
+    environment:
+      PORTFOLIO_CONN_STRING: ${PORTFOLIO_CONN_STRING}
+      TODOTECH_CONN_STRING: ${TODOTECH_CONN_STRING}
+      HANGMAN_CONN_STRING: ${HANGMAN_CONN_STRING}
 
   db:
     image: mysql:latest # use latest version of mysql
