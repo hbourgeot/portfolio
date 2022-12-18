@@ -7,9 +7,11 @@ services:
     container_name: portfolio
     restart: on-failure
     ports:
-      - "80:4000"
+      - "4000:4000"
     depends_on:
       - "db"
+    networks:
+      - web
 
   db:
     image: mysql:latest # use latest version of mysql
@@ -25,6 +27,9 @@ services:
       - my-db:/var/lib/mysql
     ports:
       - "5432:3306"
+    networks:
+      - web
+
   adminer:
     image: adminer
     restart: always
@@ -32,6 +37,12 @@ services:
       - "8080:8080"
     depends_on:
       - "db"
+    networks:
+      - web
 
 volumes: # add volume to persist data.
   my-db:
+
+networks:
+  web:
+    driver: overlay
