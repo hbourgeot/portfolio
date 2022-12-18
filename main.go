@@ -30,7 +30,7 @@ type portfolio struct {
 func main() {
 	// Portfolio flags
 	addr := flag.String("addr", ":4000", "HTTP network address")
-	dsn := flag.String("dsn", "root:Wini.h16b.@/portfolio?parseTime=true", "MySQL data source name")
+	dsn := os.Getenv("PORTFOLIO_CONN_STRING")
 
 	flag.Parse()
 
@@ -39,7 +39,7 @@ func main() {
 	errorLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	// Connection to database
-	db, err := openDB(*dsn)
+	db, err := openDB(dsn)
 	if err != nil {
 		errorLog.Fatal(err)
 	}

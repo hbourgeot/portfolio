@@ -17,10 +17,10 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment: # add default values, see docs for more info.
-      MYSQL_USER: henrry
-      MYSQL_ROOT_PASSWORD: Wini.h16b.
-      MYSQL_PASSWORD: Wini.h16b.
-      MYSQL_DATABASE: portfolio # create this database on startup
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE} # create this database on startup
     volumes:
       - my-db:/var/lib/mysql
     ports:
@@ -30,6 +30,8 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    depends_on:
+      - "db"
 
 volumes: # add volume to persist data.
   my-db:

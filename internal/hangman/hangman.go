@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/hbourgeot/portfolio/internal/api"
+	"github.com/julienschmidt/httprouter"
 )
 
 func enableCors(w *http.ResponseWriter) {
@@ -17,7 +18,7 @@ func enableCors(w *http.ResponseWriter) {
 }
 
 func GetHangman(w http.ResponseWriter, r *http.Request) {
-	db, err := openDB("root:Wini.h16b.@/hangman?parseTime=true")
+	db, err := openDB(os.Getenv("HANGMAN_CONN_STRING"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -47,7 +48,7 @@ func GetHangman(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateHangman(w http.ResponseWriter, r *http.Request) {
-	db, err := openDB("root:Wini.h16b.@/hangman?parseTime=true")
+	db, err := openDB("HANGMAN_CONN_STRING")
 	if err != nil {
 		log.Fatal(err)
 	}

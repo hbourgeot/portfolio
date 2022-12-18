@@ -1,0 +1,20 @@
+name: Deploy to Linode
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update_ssh_linode:
+    name: Telling Linode Server to Update
+    needs: "push_to_registry"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.LINODE_IP }}
+          username: ${{ secrets.LINODE_USERNAME }}
+          password: ${{ secrets.LINODE_PASSWORD }}
+          script: bash update.sh
