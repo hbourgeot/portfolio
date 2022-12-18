@@ -18,7 +18,6 @@ services:
   db:
     image: mysql:latest # use latest version of mysql
     container_name: db # add a name for the container
-    command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment: # add default values, see docs for more info.
       MYSQL_USER: ${MYSQL_USER}
