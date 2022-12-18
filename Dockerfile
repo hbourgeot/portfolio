@@ -14,3 +14,5 @@ RUN go mod tidy
 RUN go build -o main .
 # Start the application.
 CMD ["./main"]
+
+EXPOSE 4000
