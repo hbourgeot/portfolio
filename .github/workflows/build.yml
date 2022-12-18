@@ -8,7 +8,6 @@ on:
 jobs:
   update_ssh_linode:
     name: Telling Linode Server to Update
-    needs: "push_to_registry"
     runs-on: ubuntu-latest
     steps:
       - name: Executing remote ssh commands using password
