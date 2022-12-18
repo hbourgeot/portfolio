@@ -8,6 +8,6 @@ COPY . .
 RUN go mod download
 
 # Compile the binary exe for our app.
-RUN go build -o main ./cmd/web/
+RUN go build -o main .
 # Start the application.
 CMD ["./main"]
