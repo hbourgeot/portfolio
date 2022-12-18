@@ -45,4 +45,4 @@ volumes: # add volume to persist data.
 
 networks:
   web:
-    driver: overlay
+    driver: bridge
