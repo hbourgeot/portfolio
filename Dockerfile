@@ -9,6 +9,6 @@ COPY . .
 RUN go mod tidy
 
 # Compile the binary exe for our app.
-RUN go build -o main ./cmd/web
+RUN go build -o main henrry.online/cmd/web/
 # Start the application.
 CMD ["./main"]
