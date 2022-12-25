@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/hbourgeot/portfolio/internal/validator"
+	"github.com/julienschmidt/httprouter"
 )
 
 type messageForm struct {
@@ -144,4 +144,8 @@ func (folio *portfolio) StoreHome(w http.ResponseWriter, r *http.Request) {
 
 func (folio *portfolio) StoreLogin(w http.ResponseWriter, r *http.Request) {
 	folio.render(w, http.StatusOK, "./ui/store-login.gohtml", nil)
+}
+
+func (folio *portfolio) Countdown(w http.ResponseWriter, r *http.Request) {
+	folio.render(w, 200, "./ui/countdown.html", nil)
 }
