@@ -1494,6 +1494,28 @@ input[type="radio"] + label:before {
     -ms-transform: translateX(0);
     transform: translateX(0);
   }
+
+  #header.links {
+    -moz-backface-visibility: unset;
+    -webkit-backface-visibility: unset;
+    -ms-backface-visibility: unset;
+    backface-visibility: unset;
+    -moz-transition: unset;
+    -webkit-transition: unset;
+    -ms-transition: unset;
+    transition: unset;
+    display: block;
+    height: 100%;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    width: 23em;
+    z-index: 10002;
+    -moz-transform: unset;
+    -webkit-transform: unset;
+    -ms-transform: unset;
+    transform: unset;
+  }
 }
 @media screen and (max-width: 736px) {
   body,
@@ -1602,6 +1624,10 @@ input[type="radio"] + label:before {
     -webkit-transform: translateX(-17em);
     -ms-transform: translateX(-17em);
     transform: translateX(-17em);
+  }
+
+  #header.links {
+    width: min(500px, 95%);
   }
 }
 @media screen and (max-width: 480px) {
