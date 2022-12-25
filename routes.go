@@ -27,6 +27,7 @@ func (folio *portfolio) routes() http.Handler {
 	router.Handler(http.MethodGet, "/login", dynamicMiddleware.ThenFunc(folio.Login))
 	router.Handler(http.MethodPost, "/login", dynamicMiddleware.ThenFunc(folio.LoginPost))
 	router.Handler(http.MethodGet, "/countdown", dynamicMiddleware.ThenFunc(folio.Countdown))
+	router.Handler(http.MethodGet, "/links", dynamicMiddleware.ThenFunc(folio.Links))
 	router.Handler(http.MethodGet, "/panel/:logged", dynamicMiddleware.ThenFunc(folio.ShowPanel))
 
 	// API handlers

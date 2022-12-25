@@ -149,3 +149,7 @@ func (folio *portfolio) StoreLogin(w http.ResponseWriter, r *http.Request) {
 func (folio *portfolio) Countdown(w http.ResponseWriter, r *http.Request) {
 	folio.render(w, 200, "./ui/countdown.html", nil)
 }
+
+func (folio *portfolio) Links(w http.ResponseWriter, r *http.Request) {
+	folio.render(w, 200, "./ui/links.html", nil)
+}
