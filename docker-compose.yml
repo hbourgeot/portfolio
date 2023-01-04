@@ -3,7 +3,7 @@ version: "3.8"
 services:
   portfolio:
     build: # Use the Dockerfile from the current directory to build container.
-      context: ./portfolio/Dockerfile
+      context: ./portfolio/
     container_name: portfolio
     restart: on-failure
     ports:
@@ -17,7 +17,7 @@ services:
 
   karmagobot:
     build:
-      context: ./karma-gobot/Dockerfile
+      context: ./karma-gobot/
     container_name: telegram-bot
     restart: on-failure
     depends_on:
