@@ -3,13 +3,14 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"karmagot/internal/karma"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 func main() {
@@ -17,13 +18,13 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime|log.Lshortfile)
 	errorLog := log.New(os.Stderr, "INFO\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	bot, err := tgbotapi.NewBotAPI("5917051686:AAEf5hPR7stgvKb2Ig38IXfydEk88vpnUnI")
+	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_BOT_API"))
 	if err != nil {
 		errorLog.Fatal(err)
 		return
 	}
 
-	db, err := openDB("root:Wini.h16b.@/karmabot?parseTime=true")
+	db, err := openDB(os.Getenv("KARMA_CONN_STRING"))
 	if err != nil {
 		errorLog.Fatal(err)
 		return
