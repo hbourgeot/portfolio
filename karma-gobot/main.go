@@ -44,7 +44,7 @@ func main() {
 		var tableCreated bool = false
 		for i, user := range update.Message.NewChatMembers {
 			if user.UserName == "karmagobot" && botUsername == "" {
-				if botUsername == user.Username {
+				if botUsername == user.UserName {
 					break
 				}
 				botUsername = user.UserName
