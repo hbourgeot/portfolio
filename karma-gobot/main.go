@@ -45,7 +45,7 @@ func main() {
 		for i, user := range update.Message.NewChatMembers {
 			if user.UserName == "karmagobot" && botUsername == "" {
 				botUsername = user.UserName
-				update.Message.NewChatMembers = append(update.Message.NewChatMembers[:i], update.Message.NewChatMembers[i+1:])
+				update.Message.NewChatMembers = update.Message.NewChatMembers[:i]
 				break
 			}
 		}
