@@ -44,6 +44,9 @@ func main() {
 		var tableCreated bool = false
 		for i, user := range update.Message.NewChatMembers {
 			if user.UserName == "karmagobot" && botUsername == "" {
+				if botUsername == user.Username {
+					break
+				}
 				botUsername = user.UserName
 				update.Message.NewChatMembers = update.Message.NewChatMembers[:i]
 				break
@@ -63,10 +66,10 @@ func main() {
 		chat := strings.ToLower(strings.ReplaceAll(update.Message.Chat.Title, " ", "_"))
 		if botUsername == "karmagobot" && !tableCreated {
 			err = karmas.CreateTable(chat)
+			tableCreated = true
 			if err != nil {
 				errorLog.Println(err)
 			}
-			tableCreated = true
 			continue
 		}
 
