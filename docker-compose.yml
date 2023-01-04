@@ -3,7 +3,7 @@ version: "3.8"
 services:
   portfolio:
     build: # Use the Dockerfile from the current directory to build container.
-      context: .
+      context: ./portfolio/Dockerfile
     container_name: portfolio
     restart: on-failure
     ports:
@@ -14,6 +14,17 @@ services:
       PORTFOLIO_CONN_STRING: ${PORTFOLIO_CONN_STRING}
       TODOTECH_CONN_STRING: ${TODOTECH_CONN_STRING}
       HANGMAN_CONN_STRING: ${HANGMAN_CONN_STRING}
+
+  karmagobot:
+    build:
+      context: ./karma-gobot/Dockerfile
+    container_name: telegram-bot
+    restart: on-failure
+    depends_on:
+      - "db"
+    environment:
+      TELEGRAM_BOT_API: ${TELEGRAM_BOT_API}
+      KARMA_CONN_STRING: ${KARMA_CONN_STRING}
 
   db:
     image: mysql:latest # use latest version of mysql
