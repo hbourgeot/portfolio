@@ -47,9 +47,9 @@ func (m KarmaModel) InsertUsers(username, channel string) error {
 func (m *KarmaModel) GetKarmas(channel string, top bool) ([]*Karma, error) {
 	var query string
 	if top {
-		query = fmt.Sprintf("SELECT username, karma FROM `%s` ORDER BY ASC TOP 10", channel)
+		query = fmt.Sprintf("SELECT username, karma FROM `%s` ORDER BY karma DESC LIMIT 10", channel)
 	} else {
-		query = fmt.Sprintf("SELECT username, karma FROM `%s` ORDER BY DESC TOP 10", channel)
+		query = fmt.Sprintf("SELECT username, karma FROM `%s` ORDER BY karma ASC LIMIT 10", channel)
 	}
 
 	rows, err := m.DB.Query(query)
