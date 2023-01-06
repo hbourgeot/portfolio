@@ -150,10 +150,9 @@ func main() {
 				}
 				continue
 			} else if strings.Contains(update.Message.Text, "+1") {
-				err = karmas.AddKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat)
-				if err != nil {
+				err = karmas.AddKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat) // añade karma
+				if err != nil {                                                                                        // si
 					errorLog.Println(err)
-					err := karmas.InsertUsers(update.Message.ReplyToMessage.From.UserName, chat)
 					if err != nil {
 						errorLog.Println(err)
 					}
@@ -165,7 +164,6 @@ func main() {
 				err = karmas.SubstractKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat)
 				if err != nil {
 					errorLog.Println(err, ", creating new user...")
-					err := karmas.InsertUsers(update.Message.ReplyToMessage.From.UserName, chat)
 					if err != nil {
 						errorLog.Println(err)
 					}
