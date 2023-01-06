@@ -150,23 +150,16 @@ func main() {
 				}
 				continue
 			} else if strings.Contains(update.Message.Text, "+1") {
-				err = karmas.AddKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat) // añade karma
-				if err != nil {                                                                                        // si
+				err = karmas.AddKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat)
+				if err != nil {
 					errorLog.Println(err)
-					if err != nil {
-						errorLog.Println(err)
-					}
 					continue
 				}
 
 			} else if strings.Contains(update.Message.Text, "-1") {
-				fmt.Println("me diste -1", update.Message.Text)
 				err = karmas.SubstractKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat)
 				if err != nil {
-					errorLog.Println(err, ", creating new user...")
-					if err != nil {
-						errorLog.Println(err)
-					}
+					errorLog.Println(err)
 					continue
 				}
 			}
@@ -201,7 +194,6 @@ func openDB(dsn string) (*sql.DB, error) {
 }
 
 func checkGiveKarma(lastKarmaGived time.Time) bool {
-	log.Println(lastKarmaGived, time.Now().UTC())
 	return lastKarmaGived.Day() == time.Now().UTC().Day() &&
 		lastKarmaGived.Hour() == time.Now().UTC().Hour() &&
 		lastKarmaGived.Minute() == time.Now().UTC().Minute()
