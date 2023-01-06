@@ -86,7 +86,7 @@ func (m *KarmaModel) GetActualKarma(username, channel string) (int, error) {
 		return 0, err // return true if there is no rows
 	}
 
-	return user.Count, false, nil
+	return user.Count, nil
 }
 
 func (m *KarmaModel) GetLastUpdated(username, channel string) (time.Time, bool) {
