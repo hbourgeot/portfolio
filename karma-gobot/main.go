@@ -128,6 +128,8 @@ func main() {
 			if err != nil {
 				errorLog.Fatal(err)
 			}
+
+			lastUpdated, _ = karmas.GetLastUpdated(update.Message.From.UserName, chat)
 		}
 
 		// For +1 or -1
@@ -156,6 +158,7 @@ func main() {
 				}
 
 			} else if strings.Contains(update.Message.Text, "-1") {
+				fmt.Println("me diste -1", update.Message.Text)
 				err = karmas.SubstractKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat)
 				if err != nil {
 					errorLog.Println(err)
