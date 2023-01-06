@@ -3,10 +3,11 @@ package karma
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"os"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type Karma struct {
@@ -109,15 +110,15 @@ func (m *KarmaModel) AddKarma(karmaTransmitter, karmaReceiver, channel string) e
 	query := fmt.Sprintf("UPDATE `%s` SET karma = ? WHERE username = ?", channel)
 
 	karma, noRows, err := m.GetActualKarma(karmaReceiver, channel)
-	if err != nil {
-		return err
-	}
-
 	if noRows {
 		err := m.InsertUsers(karmaReceiver, channel)
 		if err != nil {
 			return err
 		}
+	}
+
+	if err != nil {
+		return err
 	}
 
 	karma++
