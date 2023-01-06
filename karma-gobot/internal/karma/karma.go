@@ -75,15 +75,15 @@ func (m *KarmaModel) GetKarmas(channel string, top bool) ([]*Karma, error) {
 	return karmas, nil
 }
 
-func (m *KarmaModel) GetActualKarma(username, channel string) (int, bool, error) {
+func (m *KarmaModel) GetActualKarma(username, channel string) (int, error) {
 	var user Karma
 	query := fmt.Sprintf("SELECT karma FROM `%s` WHERE username = ?", channel)
 
 	if err := m.DB.QueryRow(query, username).Scan(&user.Count); err != nil {
 		if err == sql.ErrNoRows {
-			return 0, true, err
+			return 0, err
 		}
-		return 0, true, err // return true if there is no rows
+		return 0, err // return true if there is no rows
 	}
 
 	return user.Count, false, nil
@@ -112,14 +112,7 @@ func (m *KarmaModel) GetLastUpdated(username, channel string) (time.Time, bool) 
 func (m *KarmaModel) AddKarma(karmaTransmitter, karmaReceiver, channel string) error {
 	query := fmt.Sprintf("UPDATE `%s` SET karma = ? WHERE username = ?", channel)
 
-	karma, noRows, err := m.GetActualKarma(karmaReceiver, channel)
-
-	if noRows {
-		err := m.InsertUsers(karmaReceiver, channel)
-		if err != nil {
-			return err
-		}
-	}
+	karma, err := m.GetActualKarma(karmaReceiver, channel)
 	if err != nil {
 		return err
 	}
@@ -141,13 +134,7 @@ func (m *KarmaModel) AddKarma(karmaTransmitter, karmaReceiver, channel string) e
 func (m *KarmaModel) SubstractKarma(karmaTransmitter, karmaReceiver, channel string) error {
 	query := fmt.Sprintf("UPDATE `%s` SET Karma = ? WHERE username = ?", channel)
 
-	karma, noRows, err := m.GetActualKarma(karmaReceiver, channel)
-	if noRows {
-		err := m.InsertUsers(karmaReceiver, channel)
-		if err != nil {
-			return err
-		}
-	}
+	karma, err := m.GetActualKarma(karmaReceiver, channel)
 	if err != nil {
 		return err
 	}

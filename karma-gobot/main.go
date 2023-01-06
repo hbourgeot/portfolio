@@ -57,7 +57,7 @@ func main() {
 			cmdText := update.Message.Command()
 			switch cmdText {
 			case "karma":
-				userKarma, _, err := karmas.GetActualKarma(update.Message.From.UserName, chat)
+				userKarma, err := karmas.GetActualKarma(update.Message.From.UserName, chat)
 				if err != nil {
 					errorLog.Fatal(err)
 					continue
@@ -169,7 +169,7 @@ func main() {
 			continue
 		}
 
-		userKarma, _, err := karmas.GetActualKarma(update.Message.ReplyToMessage.From.UserName, chat)
+		userKarma, err := karmas.GetActualKarma(update.Message.ReplyToMessage.From.UserName, chat)
 		if err != nil {
 			errorLog.Println(err)
 			continue
