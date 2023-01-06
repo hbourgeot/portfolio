@@ -41,16 +41,17 @@ func main() {
 			continue
 		}
 
-		var tableCreated bool = false
-		for i, user := range update.Message.NewChatMembers {
-			if user.UserName == "karmagobot" && botUsername == "" {
-				if botUsername == user.UserName {
-					break
+		chat := strings.ToLower(strings.ReplaceAll(update.Message.Chat.Title, " ", "_"))
+
+		if update.Message.IsCommand() {
+			cmd := update.Message.Command()
+			if cmd == "/activate" {
+				err = karmas.CreateTable(chat)
+				if err != nil {
+					errorLog.Println(err)
 				}
-				botUsername = user.UserName
-				update.Message.NewChatMembers = update.Message.NewChatMembers[:i]
-				break
 			}
+			continue
 		}
 
 		if update.Message.Chat.IsPrivate() || update.Message.Chat.IsChannel() {
@@ -59,16 +60,6 @@ func main() {
 			if _, err := bot.Send(msg); err != nil {
 				errorLog.Fatal(err)
 				return
-			}
-			continue
-		}
-
-		chat := strings.ToLower(strings.ReplaceAll(update.Message.Chat.Title, " ", "_"))
-		if botUsername == "karmagobot" && !tableCreated {
-			err = karmas.CreateTable(chat)
-			tableCreated = true
-			if err != nil {
-				errorLog.Println(err)
 			}
 			continue
 		}
