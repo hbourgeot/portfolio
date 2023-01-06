@@ -130,7 +130,7 @@ func main() {
 		// For +1 or -1
 		if strings.Contains(update.Message.Text, "+1") || strings.Contains(update.Message.Text, "-1") {
 			if update.Message.From.UserName == update.Message.ReplyToMessage.From.UserName {
-				msgError := tgbotapi.NewMessage(update.Message.Chat.ID, "ERROR, You cannot add or subtract karma yourself.")
+				msgError := tgbotapi.NewMessage(update.Message.Chat.ID, "You cannot add or subtract karma yourself.")
 				if _, err := bot.Send(msgError); err != nil {
 					errorLog.Fatal(err)
 					return
@@ -139,7 +139,7 @@ func main() {
 			}
 
 			if checkGiveKarma(lastUpdated) {
-				msgError := tgbotapi.NewMessage(update.Message.Chat.ID, "ERROR, You must to have to wait 1 minute to give karma.")
+				msgError := tgbotapi.NewMessage(update.Message.Chat.ID, "You must wait one minute to give karma.")
 				if _, err := bot.Send(msgError); err != nil {
 					errorLog.Fatal(err)
 					return
