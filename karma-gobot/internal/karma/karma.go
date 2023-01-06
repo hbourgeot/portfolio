@@ -139,15 +139,15 @@ func (m *KarmaModel) SubstractKarma(karmaTransmitter, karmaReceiver, channel str
 	query := fmt.Sprintf("UPDATE `%s` SET Karma = ? WHERE username = ?", channel)
 
 	karma, noRows, err := m.GetActualKarma(karmaReceiver, channel)
-	if err != nil {
-		return err
-	}
-
 	if noRows {
 		err := m.InsertUsers(karmaReceiver, channel)
 		if err != nil {
 			return err
 		}
+	}
+
+	if err != nil {
+		return err
 	}
 
 	karma--
