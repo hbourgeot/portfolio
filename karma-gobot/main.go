@@ -124,7 +124,7 @@ func main() {
 
 		lastUpdated, noRows := karmas.GetLastUpdated(update.Message.From.UserName, chat)
 		if noRows {
-			continue
+			lastUpdated, _ = time.Parse(time.RFC3339, "2006-01-02T15:04:05+07:00")
 		}
 
 		// For +1 or -1
