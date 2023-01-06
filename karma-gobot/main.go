@@ -42,17 +42,6 @@ func main() {
 
 		chat := strings.ToLower(strings.ReplaceAll(update.Message.Chat.Title, " ", "_"))
 
-		if update.Message.IsCommand() {
-			cmd := update.Message.Command()
-			if cmd == "/activate" {
-				err = karmas.CreateTable(chat)
-				if err != nil {
-					errorLog.Println(err)
-				}
-			}
-			continue
-		}
-
 		if update.Message.Chat.IsPrivate() || update.Message.Chat.IsChannel() {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "This bot can't run on private conversations and channels. Use it in a group")
 			msg.ReplyToMessageID = update.Message.MessageID
@@ -137,7 +126,7 @@ func main() {
 				userKarma, _, err := karmas.GetActualKarma(update.Message.From.UserName, chat)
 				if err != nil {
 					errorLog.Fatal(err)
-					return
+					continue
 				}
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "@"+update.Message.From.UserName+" has "+strconv.Itoa(userKarma)+" of karma.")
 				msg.ReplyToMessageID = update.Message.MessageID
@@ -157,6 +146,12 @@ func main() {
 				for i, user := range users {
 					usersString += fmt.Sprintf("%d. %s, %d karma.\n", i, update.Message.From.UserName, user.Count)
 				}
+
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, usersString)
+				if _, err := bot.Send(msg); err != nil {
+					errorLog.Fatal(err)
+					return
+				}
 				break
 			case "/karmahate":
 				users, err := karmas.GetKarmas(chat, false)
@@ -169,6 +164,26 @@ func main() {
 				for i, user := range users {
 					usersString += fmt.Sprintf("%d. %s, %d karma.\n", i, update.Message.From.UserName, user.Count)
 				}
+
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, usersString)
+				if _, err := bot.Send(msg); err != nil {
+					errorLog.Fatal(err)
+					return
+				}
+				break
+			case "/activate":
+				err = karmas.CreateTable(chat)
+				if err != nil {
+					errorLog.Println(err)
+					continue
+				}
+
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Table created.")
+				if _, err := bot.Send(msg); err != nil {
+					errorLog.Fatal(err)
+					return
+				}
+				break
 			}
 		}
 	}
