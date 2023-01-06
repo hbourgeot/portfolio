@@ -58,11 +58,11 @@ func (m *KarmaModel) GetKarmas(channel string, top bool) ([]*Karma, error) {
 	}
 	defer rows.Close()
 
-	var karmas []*Karma
+	karmas := []*Karma{}
 
 	for rows.Next() {
-		var karma *Karma
-		if err = rows.Scan(&karma.User, &karma.Count); err != nil {
+		k := &Karma{}
+		if err = rows.Scan(&k.User, &k.Count); err != nil {
 			if err == sql.ErrNoRows {
 				return nil, err
 			}
@@ -70,7 +70,7 @@ func (m *KarmaModel) GetKarmas(channel string, top bool) ([]*Karma, error) {
 			return nil, err
 		}
 
-		karmas = append(karmas, karma)
+		karmas = append(karmas, k)
 	}
 	return karmas, nil
 }
