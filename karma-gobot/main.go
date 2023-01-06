@@ -128,7 +128,6 @@ func main() {
 			if err != nil {
 				errorLog.Fatal(err)
 			}
-			continue
 		}
 
 		// For +1 or -1
