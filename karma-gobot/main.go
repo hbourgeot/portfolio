@@ -124,12 +124,7 @@ func main() {
 
 		lastUpdated, noRows := karmas.GetLastUpdated(update.Message.From.UserName, chat)
 		if noRows {
-			err := karmas.InsertUsers(update.Message.From.UserName, chat)
-			if err != nil {
-				errorLog.Fatal(err)
-			}
-
-			lastUpdated, _ = karmas.GetLastUpdated(update.Message.From.UserName, chat)
+			continue
 		}
 
 		// For +1 or -1
