@@ -83,7 +83,7 @@ func (m *KarmaModel) GetActualKarma(username, channel string) (int, error) {
 		if err == sql.ErrNoRows {
 			return 0, err
 		}
-		return 0, err // return true if there is no rows
+		return 0, err
 	}
 
 	return user.Count, nil
@@ -99,7 +99,15 @@ func (m *KarmaModel) GetLastUpdated(username, channel string) (time.Time, bool) 
 
 	if err := m.DB.QueryRow(query, username).Scan(&user.LastUpdated); err != nil {
 		if err == sql.ErrNoRows {
-			return user.LastUpdated, true
+			err = m.InsertUsers(username, channel)
+			if err != nil {
+				return user.LastUpdated, true
+			}
+
+			if err := m.DB.QueryRow(query, username).Scan(&user.LastUpdated); err != nil {
+				return user.LastUpdated, true
+			}
+			return user.LastUpdated, false
 		}
 		return user.LastUpdated, true
 	}
