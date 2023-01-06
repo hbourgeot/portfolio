@@ -119,6 +119,11 @@ func (m *KarmaModel) AddKarma(karmaTransmitter, karmaReceiver, channel string) e
 		return err
 	}
 
+	karma, _, err = m.GetActualKarma(karmaReceiver, channel)
+	if err != nil {
+		return err
+	}
+
 	karma++
 	_, err = m.DB.Exec(query, karma, karmaReceiver)
 	if err != nil {
@@ -145,7 +150,7 @@ func (m *KarmaModel) SubstractKarma(karmaTransmitter, karmaReceiver, channel str
 	} else {
 		return err
 	}
-
+	karma, _, err = m.GetActualKarma(karmaReceiver, channel)
 	if err != nil {
 		return err
 	}
