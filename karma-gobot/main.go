@@ -52,72 +52,6 @@ func main() {
 			continue
 		}
 
-		lastUpdated, noRows := karmas.GetLastUpdated(update.Message.From.UserName, chat)
-		if noRows {
-			err := karmas.InsertUsers(update.Message.From.UserName, chat)
-			if err != nil {
-				errorLog.Fatal(err)
-			}
-			continue
-		}
-
-		// For +1 or -1
-		if strings.Contains(update.Message.Text, "+1") || strings.Contains(update.Message.Text, "-1") {
-			if update.Message.From.UserName == update.Message.ReplyToMessage.From.UserName {
-				msgError := tgbotapi.NewMessage(update.Message.Chat.ID, "ERROR, You cannot add or subtract karma yourself.")
-				if _, err := bot.Send(msgError); err != nil {
-					errorLog.Fatal(err)
-					return
-				}
-				continue
-			}
-
-			if checkGiveKarma(lastUpdated) {
-				msgError := tgbotapi.NewMessage(update.Message.Chat.ID, "ERROR, You must to have to wait 1 minute to give karma.")
-				if _, err := bot.Send(msgError); err != nil {
-					errorLog.Fatal(err)
-					return
-				}
-				continue
-			} else if strings.Contains(update.Message.Text, "+1") {
-				err = karmas.AddKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat)
-				if err != nil {
-					errorLog.Println(err)
-					err := karmas.InsertUsers(update.Message.ReplyToMessage.From.UserName, chat)
-					if err != nil {
-						errorLog.Println(err)
-					}
-					continue
-				}
-
-			} else if strings.Contains(update.Message.Text, "-1") {
-				fmt.Println("me diste -1", update.Message.Text)
-				err = karmas.SubstractKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat)
-				if err != nil {
-					errorLog.Println(err, ", creating new user...")
-					err := karmas.InsertUsers(update.Message.ReplyToMessage.From.UserName, chat)
-					if err != nil {
-						errorLog.Println(err)
-					}
-					continue
-				}
-			}
-		} else {
-			continue
-		}
-
-		userKarma, _, err := karmas.GetActualKarma(update.Message.ReplyToMessage.From.UserName, chat)
-		if err != nil {
-			errorLog.Println(err)
-			continue
-		}
-
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.ReplyToMessage.From.UserName+" has now "+strconv.Itoa(userKarma)+" of karma")
-		msg.ReplyToMessageID = update.Message.MessageID
-		if _, err := bot.Send(msg); err != nil {
-			errorLog.Fatal(err)
-			return
-		}
 		// For bot commands
 		if update.Message.IsCommand() {
 			cmdText := update.Message.Command()
@@ -185,6 +119,74 @@ func main() {
 				}
 				break
 			}
+			continue
+		}
+
+		lastUpdated, noRows := karmas.GetLastUpdated(update.Message.From.UserName, chat)
+		if noRows {
+			err := karmas.InsertUsers(update.Message.From.UserName, chat)
+			if err != nil {
+				errorLog.Fatal(err)
+			}
+			continue
+		}
+
+		// For +1 or -1
+		if strings.Contains(update.Message.Text, "+1") || strings.Contains(update.Message.Text, "-1") {
+			if update.Message.From.UserName == update.Message.ReplyToMessage.From.UserName {
+				msgError := tgbotapi.NewMessage(update.Message.Chat.ID, "ERROR, You cannot add or subtract karma yourself.")
+				if _, err := bot.Send(msgError); err != nil {
+					errorLog.Fatal(err)
+					return
+				}
+				continue
+			}
+
+			if checkGiveKarma(lastUpdated) {
+				msgError := tgbotapi.NewMessage(update.Message.Chat.ID, "ERROR, You must to have to wait 1 minute to give karma.")
+				if _, err := bot.Send(msgError); err != nil {
+					errorLog.Fatal(err)
+					return
+				}
+				continue
+			} else if strings.Contains(update.Message.Text, "+1") {
+				err = karmas.AddKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat)
+				if err != nil {
+					errorLog.Println(err)
+					err := karmas.InsertUsers(update.Message.ReplyToMessage.From.UserName, chat)
+					if err != nil {
+						errorLog.Println(err)
+					}
+					continue
+				}
+
+			} else if strings.Contains(update.Message.Text, "-1") {
+				fmt.Println("me diste -1", update.Message.Text)
+				err = karmas.SubstractKarma(update.Message.From.UserName, update.Message.ReplyToMessage.From.UserName, chat)
+				if err != nil {
+					errorLog.Println(err, ", creating new user...")
+					err := karmas.InsertUsers(update.Message.ReplyToMessage.From.UserName, chat)
+					if err != nil {
+						errorLog.Println(err)
+					}
+					continue
+				}
+			}
+		} else {
+			continue
+		}
+
+		userKarma, _, err := karmas.GetActualKarma(update.Message.ReplyToMessage.From.UserName, chat)
+		if err != nil {
+			errorLog.Println(err)
+			continue
+		}
+
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.ReplyToMessage.From.UserName+" has now "+strconv.Itoa(userKarma)+" of karma")
+		msg.ReplyToMessageID = update.Message.MessageID
+		if _, err := bot.Send(msg); err != nil {
+			errorLog.Fatal(err)
+			return
 		}
 	}
 }
