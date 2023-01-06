@@ -57,7 +57,7 @@ func main() {
 			cmdText := update.Message.Command()
 			fmt.Println(cmdText)
 			switch cmdText {
-			case "/karma":
+			case "karma":
 				userKarma, _, err := karmas.GetActualKarma(update.Message.From.UserName, chat)
 				if err != nil {
 					errorLog.Fatal(err)
@@ -71,7 +71,7 @@ func main() {
 					return
 				}
 				break
-			case "/karmalove":
+			case "karmalove":
 				users, err := karmas.GetKarmas(chat, true)
 				if err != nil {
 					errorLog.Println(err)
@@ -89,7 +89,7 @@ func main() {
 					return
 				}
 				break
-			case "/karmahate":
+			case "karmahate":
 				users, err := karmas.GetKarmas(chat, false)
 				if err != nil {
 					errorLog.Println(err)
@@ -107,7 +107,7 @@ func main() {
 					return
 				}
 				break
-			case "/activate":
+			case "activate":
 				err = karmas.CreateTable(chat)
 				if err != nil {
 					errorLog.Println(err)
