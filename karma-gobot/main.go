@@ -65,7 +65,6 @@ func main() {
 		}
 
 		lastUpdated, noRows := karmas.GetLastUpdated(update.Message.From.UserName, chat)
-
 		if noRows {
 			err := karmas.InsertUsers(update.Message.From.UserName, chat)
 			if err != nil {
