@@ -55,6 +55,7 @@ func main() {
 		// For bot commands
 		if update.Message.IsCommand() {
 			cmdText := update.Message.Command()
+			fmt.Println(cmdText)
 			switch cmdText {
 			case "/karma":
 				userKarma, _, err := karmas.GetActualKarma(update.Message.From.UserName, chat)
@@ -62,6 +63,7 @@ func main() {
 					errorLog.Fatal(err)
 					continue
 				}
+
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "@"+update.Message.From.UserName+" has "+strconv.Itoa(userKarma)+" of karma.")
 				msg.ReplyToMessageID = update.Message.MessageID
 				if _, err := bot.Send(msg); err != nil {
@@ -111,13 +113,13 @@ func main() {
 					errorLog.Println(err)
 					continue
 				}
+				fmt.Println("Tabla creada para", chat)
 
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Table created.")
 				if _, err := bot.Send(msg); err != nil {
 					errorLog.Fatal(err)
 					return
 				}
-				break
 			}
 			continue
 		}
