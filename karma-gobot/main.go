@@ -59,8 +59,18 @@ func main() {
 			case "karma":
 				userKarma, err := karmas.GetActualKarma(update.Message.From.UserName, chat)
 				if err != nil {
-					errorLog.Fatal(err)
-					continue
+					errorLog.Println(err)
+					err = karmas.InsertUsers(update.Message.From.UserName, chat)
+					if err != nil {
+						errorLog.Println(err)
+						continue
+					}
+
+					userKarma, err = karmas.GetActualKarma(update.Message.From.UserName, chat)
+					if err != nil {
+						errorLog.Println(err)
+						continue
+					}
 				}
 
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "@"+update.Message.From.UserName+" has "+strconv.Itoa(userKarma)+" of karma.")

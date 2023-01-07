@@ -82,12 +82,7 @@ func (m *KarmaModel) GetActualKarma(username, channel string) (int, error) {
 	query := fmt.Sprintf("SELECT karma FROM `%s` WHERE username = ?", channel)
 
 	if err := m.DB.QueryRow(query, username).Scan(&user.Count); err != nil {
-		err := m.InsertUsers(username, channel)
-		if err != nil {
-			return 0, err
-		}
-
-		return 0, nil
+		return 0, err
 	}
 
 	return user.Count, nil
