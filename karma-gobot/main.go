@@ -69,7 +69,6 @@ func main() {
 					errorLog.Fatal(err)
 					return
 				}
-				break
 			case "karmalove":
 				users, err := karmas.GetKarmas(chat, true)
 				if err != nil {
@@ -87,7 +86,6 @@ func main() {
 					errorLog.Fatal(err)
 					return
 				}
-				break
 			case "karmahate":
 				users, err := karmas.GetKarmas(chat, false)
 				if err != nil {
@@ -105,7 +103,6 @@ func main() {
 					errorLog.Fatal(err)
 					return
 				}
-				break
 			case "activate":
 				err = karmas.CreateTable(chat)
 				if err != nil {
