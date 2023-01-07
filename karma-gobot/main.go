@@ -79,7 +79,7 @@ func main() {
 
 				usersString := "Most loved users of " + chat + "\n"
 				for i, user := range users {
-					usersString += fmt.Sprintf("%d. %s has %d of karma.\n", i+1, user.Username, user.Count)
+					usersString += fmt.Sprintf("%d. %s has %d of karma.\n", i+1, user.User, user.Count)
 				}
 
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, usersString)
