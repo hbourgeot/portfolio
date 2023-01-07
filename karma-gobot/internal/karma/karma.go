@@ -49,7 +49,7 @@ func (m *KarmaModel) GetKarmas(channel string, top bool) ([]*Karma, error) {
 	if top {
 		query = fmt.Sprintf("SELECT username, karma FROM `%s` WHERE karma > 0 ORDER BY karma DESC LIMIT 10", channel)
 	} else {
-		query = fmt.Sprintf("SELECT username, karma FROM `%s` WHERE karma > 0 ORDER BY karma DESC LIMIT 10", channel)
+		query = fmt.Sprintf("SELECT username, karma FROM `%s` WHERE karma < 0 ORDER BY karma ASC LIMIT 10", channel)
 	}
 
 	rows, err := m.DB.Query(query)
