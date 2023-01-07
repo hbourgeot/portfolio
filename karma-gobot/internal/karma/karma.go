@@ -62,16 +62,18 @@ func (m *KarmaModel) GetKarmas(channel string, top bool) ([]*Karma, error) {
 
 	for rows.Next() {
 		k := &Karma{}
-		if err = rows.Scan(&k.User, &k.Count); err != nil {
-			if err == sql.ErrNoRows {
-				return nil, err
-			}
-
+		err := rows.Scan(&k.User, &k.Count)
+		if err != nil {
 			return nil, err
 		}
 
 		karmas = append(karmas, k)
 	}
+
+	if rows.Err() != nil {
+		return nil, err
+	}
+
 	return karmas, nil
 }
 
